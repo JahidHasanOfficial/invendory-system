@@ -144,10 +144,18 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            DB::table('users')->insert(array_merge($user, [
+            $role = $user['role'] ?? 'branch_staff';
+            unset($user['role']);
+
+            $id = DB::table('users')->insertGetId(array_merge($user, [
                 'created_at' => now(),
                 'updated_at' => now(),
             ]));
+
+            $userModel = \App\Models\User::find($id);
+            if ($userModel) {
+                $userModel->assignRole($role);
+            }
         }
     }
 }

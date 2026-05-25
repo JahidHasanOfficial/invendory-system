@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         \$this->call([
             OrganizationSeeder::class,
             BranchSeeder::class,
+            RolePermissionSeeder::class,
             UserSeeder::class,
             ProductCategorySeeder::class,
             BrandSeeder::class,
@@ -133,6 +134,35 @@ class BranchSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]));
+        }
+    }
+}
+EOT,
+
+    'RolePermissionSeeder.php' => <<<EOT
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+
+class RolePermissionSeeder extends Seeder
+{
+    public function run(): void
+    {
+        \$roles = [
+            'branch_staff',
+            'branch_manager',
+            'store_keeper',
+            'inventory_manager',
+            'hr_admin',
+            'cfo',
+            'md'
+        ];
+
+        foreach (\$roles as \$role) {
+            Role::findOrCreate(\$role);
         }
     }
 }
@@ -285,10 +315,18 @@ class UserSeeder extends Seeder
         ];
 
         foreach (\$users as \$user) {
-            DB::table('users')->insert(array_merge(\$user, [
+            \$role = \$user['role'] ?? 'branch_staff';
+            unset(\$user['role']);
+
+            \$id = DB::table('users')->insertGetId(array_merge(\$user, [
                 'created_at' => now(),
                 'updated_at' => now(),
             ]));
+
+            \$userModel = \App\Models\User::find(\$id);
+            if (\$userModel) {
+                \$userModel->assignRole(\$role);
+            }
         }
     }
 }

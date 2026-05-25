@@ -47,7 +47,6 @@ $migrations = [
             \$table->string('email', 100)->unique();
             \$table->string('phone', 20)->nullable();
             \$table->string('password', 255);
-            \$table->enum('role', ['branch_staff', 'branch_manager', 'store_keeper', 'inventory_manager', 'hr_admin', 'cfo', 'md'])->default('branch_staff');
             \$table->string('designation', 100)->nullable();
             \$table->date('joining_date')->nullable();
             \$table->tinyInteger('status')->default(1);
@@ -60,7 +59,6 @@ $migrations = [
             
             \$table->index('organization_id');
             \$table->index('branch_id');
-            \$table->index('role');
             \$table->index('status');"
     ],
     [
