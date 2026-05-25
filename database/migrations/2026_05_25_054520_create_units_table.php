@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('units', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedBigInteger('organization_id');
+            $table->string('short_name', 40);
+            $table->string('full_name', 100);
+            $table->tinyInteger('status')->default(1);
+            $table->timestamp('created_at')->nullable();
+
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            
+            $table->index('organization_id');
+            $table->index('status');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('units');
+    }
+};
