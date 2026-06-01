@@ -10,6 +10,7 @@ class RolePermissionSeeder extends Seeder
     public function run(): void
     {
         $roles = [
+            'super_admin',
             'branch_staff',
             'branch_manager',
             'store_keeper',
