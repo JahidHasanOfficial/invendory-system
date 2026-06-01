@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('page_title', 'Category List')
+@section('title', 'Units')
 
 @section('content')
 <div class="container-fluid px-4 py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h3 mb-0 text-gray-800">Categories</h2>
-        @can('categories.create')
-        <a href="{{ route('admin.categories.create') }}" class="btn btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Add New Category
+        <h2 class="h3 mb-0 text-gray-800">Units</h2>
+        @can('units.create')
+        <a href="{{ route('admin.units.create') }}" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Add New Unit
         </a>
         @endcan
     </div>
@@ -22,7 +22,7 @@
 
     <div class="card shadow mb-4 border-0">
         <div class="card-header py-3 bg-white d-flex align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-list me-2"></i>Category List</h6>
+            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-list me-2"></i>Unit List</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -30,35 +30,33 @@
                     <thead class="table-light">
                         <tr>
                             <th width="5%">ID</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Parent Category</th>
+                            <th>Full Name</th>
+                            <th>Short Name</th>
                             <th width="10%">Status</th>
                             <th width="15%" class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($categories as $category)
+                        @forelse($units as $unit)
                             <tr>
-                                <td>{{ $category->id }}</td>
-                                <td class="fw-bold">{{ $category->name }}</td>
-                                <td>{{ Str::limit($category->description, 50) }}</td>
-                                <td>{{ $category->parent ? $category->parent->name : '-' }}</td>
+                                <td>{{ $unit->id }}</td>
+                                <td class="fw-bold">{{ $unit->full_name }}</td>
+                                <td>{{ $unit->short_name }}</td>
                                 <td>
-                                    @if($category->status)
+                                    @if($unit->status)
                                         <span class="badge bg-success">Active</span>
                                     @else
                                         <span class="badge bg-danger">Inactive</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    @can('categories.edit')
-                                    <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-sm btn-info text-white shadow-sm" title="Edit">
+                                    @can('units.edit')
+                                    <a href="{{ route('admin.units.edit', $unit->id) }}" class="btn btn-sm btn-info text-white shadow-sm" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     @endcan
-                                    @can('categories.delete')
-                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                    @can('units.delete')
+                                    <form action="{{ route('admin.units.destroy', $unit->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this unit?');">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-danger shadow-sm" title="Delete">
@@ -70,14 +68,14 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">No categories found.</td>
+                                <td colspan="5" class="text-center py-4 text-muted">No units found.</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
             <div class="d-flex justify-content-end mt-3">
-                {{ $categories->links() }}
+                {{ $units->links() }}
             </div>
         </div>
     </div>

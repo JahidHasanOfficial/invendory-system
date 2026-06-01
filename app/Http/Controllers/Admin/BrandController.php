@@ -3,16 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreBrandRequest;
+use App\Http\Requests\UpdateBrandRequest;
+use App\Services\BrandService;
+use App\Models\Brand;
 use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
+    protected BrandService $brandService;
+
+    public function __construct(BrandService $brandService)
+    {
+        $this->brandService = $brandService;
+    }
+
     public function index()
     {
-        $brands = \App\Models\Brand::when(auth()->user()->organization_id, function ($query) {
-            $query->where('organization_id', auth()->user()->organization_id);
-        })->latest()->paginate(10);
-
+        $brands = $this->brandService->getPaginated(10);
         return view('admin.brands.index', compact('brands'));
     }
 
@@ -21,49 +29,26 @@ class BrandController extends Controller
         return view('admin.brands.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreBrandRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:60',
-            'description' => 'nullable|string',
-            'status' => 'boolean',
-        ]);
-
-        \App\Models\Brand::create([
-            'organization_id' => auth()->user()->organization_id ?? 1, // Default to 1 if null
-            'name' => $request->name,
-            'description' => $request->description,
-            'status' => $request->has('status') ? true : false,
-        ]);
-
+        $this->brandService->create($request->validated());
         return redirect()->route('admin.brands.index')->with('success', 'Brand created successfully.');
     }
 
-    public function edit(\App\Models\Brand $brand)
+    public function edit(Brand $brand)
     {
         return view('admin.brands.edit', compact('brand'));
     }
 
-    public function update(Request $request, \App\Models\Brand $brand)
+    public function update(UpdateBrandRequest $request, Brand $brand)
     {
-        $request->validate([
-            'name' => 'required|string|max:60',
-            'description' => 'nullable|string',
-            'status' => 'boolean',
-        ]);
-
-        $brand->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'status' => $request->has('status') ? true : false,
-        ]);
-
+        $this->brandService->update($brand->id, $request->validated());
         return redirect()->route('admin.brands.index')->with('success', 'Brand updated successfully.');
     }
 
-    public function destroy(\App\Models\Brand $brand)
+    public function destroy(Brand $brand)
     {
-        $brand->delete();
+        $this->brandService->delete($brand->id);
         return redirect()->route('admin.brands.index')->with('success', 'Brand deleted successfully.');
     }
 }

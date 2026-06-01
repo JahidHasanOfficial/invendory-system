@@ -115,6 +115,33 @@
             <a class="nav-link {{ request()->is('admin/users*') ? 'active' : '' }}" href="{{ url('admin/users') }}">
                 <i class="fas fa-users-gear"></i> ব্যবহারকারী
             </a>
+            
+            <!-- Role & Permission Menu -->
+            <div class="nav-item">
+                <a class="nav-link {{ request()->is('admin/roles*') || request()->is('admin/permissions*') ? 'active' : 'text-white-50' }}" 
+                   data-bs-toggle="collapse" 
+                   href="#rolePermissionCollapse" 
+                   role="button" 
+                   aria-expanded="{{ request()->is('admin/roles*') || request()->is('admin/permissions*') ? 'true' : 'false' }}" 
+                   aria-controls="rolePermissionCollapse"
+                   style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <i class="fas fa-shield-alt text-success me-2"></i> Role & Permission
+                    </div>
+                    <i class="fas fa-chevron-down ms-auto" style="font-size: 10px; transition: transform 0.3s;" id="rp-chevron"></i>
+                </a>
+                <div class="collapse {{ request()->is('admin/roles*') || request()->is('admin/permissions*') ? 'show' : '' }}" id="rolePermissionCollapse">
+                    <div class="nav flex-column ms-3 ps-3 border-start border-secondary" style="border-left-color: rgba(255,255,255,0.1) !important;">
+                        <a class="nav-link py-2 {{ request()->routeIs('admin.roles.index') ? 'active text-white bg-white bg-opacity-10 rounded' : 'text-white-50' }}" href="{{ route('admin.roles.index') }}">
+                            Roles List
+                        </a>
+                        <a class="nav-link py-2 {{ request()->routeIs('admin.permissions.index') ? 'active text-white bg-white bg-opacity-10 rounded' : 'text-white-50' }}" href="{{ route('admin.permissions.index') }}">
+                            Permissions List
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <a class="nav-link {{ request()->is('admin/settings*') ? 'active' : '' }}" href="{{ url('admin/settings') }}">
                 <i class="fas fa-cog"></i> সেটিংস
             </a>

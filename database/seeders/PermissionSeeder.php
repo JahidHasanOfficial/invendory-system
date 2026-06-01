@@ -31,8 +31,13 @@ class PermissionSeeder extends Seeder
             }
         }
 
+        $allPermissions = [];
         foreach ($permissions as $permission) {
-            Permission::findOrCreate($permission, 'web');
+            $allPermissions[] = Permission::findOrCreate($permission, 'web');
         }
+
+        // Create super_admin role and assign all permissions
+        $superAdmin = \Spatie\Permission\Models\Role::findOrCreate('super_admin', 'web');
+        $superAdmin->syncPermissions($allPermissions);
     }
 }
