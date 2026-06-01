@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Unit extends Model
 {
-    //
+    public const UPDATED_AT = null;
+    protected $guarded = [];
+//
 }

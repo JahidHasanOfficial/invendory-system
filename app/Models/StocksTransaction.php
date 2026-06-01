@@ -6,5 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class StocksTransaction extends Model
 {
-    //
+    protected $guarded = [];
+//
 }

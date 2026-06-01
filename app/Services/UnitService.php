@@ -26,13 +26,11 @@ class UnitService
 
     public function getAll(): Collection
     {
-        $orgId = auth()->check() ? auth()->user()->organization_id : 0;
+        $orgId = auth()->user()->organization_id ?? 0;
         
-        return Cache::remember("{$this->cacheKey}:org:{$orgId}:all", $this->cacheTtl, function () use ($orgId) {
-            return Unit::when($orgId, function ($query) use ($orgId) {
-                $query->where('organization_id', $orgId);
-            })->orderBy('full_name')->get();
-        });
+        return Unit::when($orgId, function ($query) use ($orgId) {
+            $query->where('organization_id', $orgId);
+        })->orderBy('full_name')->get();
     }
 
     public function getById(int $id): Unit

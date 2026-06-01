@@ -28,11 +28,9 @@ class ProductCategoryService
     {
         $orgId = auth()->check() ? auth()->user()->organization_id : 0;
         
-        return Cache::remember("{$this->cacheKey}:org:{$orgId}:all", $this->cacheTtl, function () use ($orgId) {
-            return ProductCategory::when($orgId, function ($query) use ($orgId) {
-                $query->where('organization_id', $orgId);
-            })->orderBy('name')->get();
-        });
+        return ProductCategory::when($orgId, function ($query) use ($orgId) {
+            $query->where('organization_id', $orgId);
+        })->orderBy('name')->get();
     }
 
     public function getById(int $id): ProductCategory

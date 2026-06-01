@@ -1,40 +1,81 @@
 @extends('layouts.app')
 
-@section('page_title', 'ল্যাব সমূহ')
+@section('title', 'Labs')
 
 @section('content')
-<div class="container-fluid p-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4>ল্যাব সমূহ</h4>
-            <select class="form-select w-auto" id="branchSelect">
-                <option>উত্তরা ট্রেনিং সেন্টার</option>
-                <option>গুলশান ট্রেনিং সেন্টার</option>
-                <option>চট্টগ্রাম ট্রেনিং সেন্টার</option>
-            </select>
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 mb-0 text-gray-800">Labs</h2>
+        <a href="{{ route('admin.labs.create') }}" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Add New Lab
+        </a>
+    </div>
+
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm rounded-4">
-                    <div class="card-header bg-transparent border-0 pt-4">
-                        <h5><i class="fas fa-chalkboard me-2 text-primary"></i>ল্যাব-০১ (মেইন ল্যাব)</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between mb-2"><span>মোট ওয়ার্কস্টেশন:</span><strong>২৫টি</strong></div>
-                        <div class="d-flex justify-content-between mb-2"><span>ব্যবহৃত:</span><strong class="text-success">১৫টি</strong></div>
-                        <div class="d-flex justify-content-between mb-2"><span>খালি:</span><strong class="text-secondary">১০টি</strong></div>
-                        <div class="progress mb-3" style="height: 8px;"><div class="progress-bar bg-success" style="width: 60%"></div></div>
-                        <div class="d-flex justify-content-between text-muted" style="font-size:12px;">
-                            <span><i class="fas fa-mouse"></i> মাউস: ২৫</span>
-                            <span><i class="fas fa-keyboard"></i> কিবোর্ড: ২০</span>
-                            <span><i class="fas fa-tv"></i> মনিটর: ১৫</span>
-                        </div>
-                    </div>
-                    <div class="card-footer bg-transparent border-0 pb-4">
-                        <button class="btn btn-outline-primary w-100" onclick="location.href='lab-stock.html'">ল্যাব দেখুন</button>
-                    </div>
-                </div>
+    @endif
+
+    <div class="card shadow mb-4 border-0">
+        <div class="card-header py-3 bg-white d-flex align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-laptop-house me-2"></i>Lab List</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Branch</th>
+                            <th>Type</th>
+                            <th>Capacity</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($labs as $lab)
+                            <tr>
+                                <td class="fw-bold">{{ $lab->lab_code }}</td>
+                                <td>{{ $lab->name }}</td>
+                                <td>{{ $lab->branch ? $lab->branch->name : '-' }}</td>
+                                <td>{{ ucwords(str_replace('_', ' ', $lab->lab_type)) }}</td>
+                                <td>{{ $lab->capacity }}</td>
+                                <td>
+                                    @if($lab->status)
+                                        <span class="badge bg-success">Active</span>
+                                    @else
+                                        <span class="badge bg-danger">Inactive</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ route('admin.labs.edit', $lab->id) }}" class="btn btn-sm btn-info text-white shadow-sm" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('admin.labs.destroy', $lab->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this lab?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger shadow-sm" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">No labs found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                {{ $labs->links() }}
             </div>
         </div>
     </div>
+</div>
 @endsection

@@ -6,5 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class WarehouseZone extends Model
 {
-    //
+    protected $guarded = [];
+//
 }

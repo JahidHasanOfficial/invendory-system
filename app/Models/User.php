@@ -16,7 +16,8 @@ use Spatie\Permission\Traits\HasRoles;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
+    protected $guarded = [];
+/** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 
     /**

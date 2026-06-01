@@ -6,5 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class CurrentStock extends Model
 {
-    //
+    protected $guarded = [];
+//
 }

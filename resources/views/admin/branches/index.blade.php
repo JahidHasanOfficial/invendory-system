@@ -1,56 +1,81 @@
 @extends('layouts.app')
 
-@section('page_title', 'শাখা সমূহ')
+@section('title', 'Branches')
 
 @section('content')
-<div class="container-fluid p-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4>শাখা সমূহ</h4>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBranchModal"><i class="fas fa-plus me-2"></i>নতুন শাখা</button>
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 mb-0 text-gray-800">Branches</h2>
+        <a href="{{ route('admin.branches.create') }}" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Add New Branch
+        </a>
+    </div>
+
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-4">
-                <div class="card border-0 shadow-sm rounded-4">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <h5 class="card-title">হেড অফিস</h5>
-                                <p class="text-muted small">কোড: HO</p>
-                                <p class="mb-1"><i class="fas fa-map-marker-alt me-2 text-secondary"></i>উত্তরা, ঢাকা</p>
-                                <p><i class="fas fa-phone me-2 text-secondary"></i>+৮৮০১৭১২৩৪৫৬০১</p>
-                            </div>
-                            <span class="badge bg-primary">হেড অফিস</span>
-                        </div>
-                        <hr>
-                        <div class="d-flex justify-content-between">
-                            <small><i class="fas fa-laptop me-1"></i> ১৫ কম্পিউটার</small>
-                            <small><i class="fas fa-boxes me-1"></i> ১২০ পণ্য</small>
-                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addBranchModal"><i class="fas fa-eye"></i> দেখুন</button>
-                        </div>
-                    </div>
-                </div>
+    @endif
+
+    <div class="card shadow mb-4 border-0">
+        <div class="card-header py-3 bg-white d-flex align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-building me-2"></i>Branch List</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Contact Person</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($branches as $branch)
+                            <tr>
+                                <td class="fw-bold">{{ $branch->code }}</td>
+                                <td>{{ $branch->name }}</td>
+                                <td>{{ ucwords(str_replace('_', ' ', $branch->branch_type)) }}</td>
+                                <td>{{ $branch->contact_person ?? '-' }}</td>
+                                <td>{{ $branch->phone ?? '-' }}</td>
+                                <td>
+                                    @if($branch->status)
+                                        <span class="badge bg-success">Active</span>
+                                    @else
+                                        <span class="badge bg-danger">Inactive</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ route('admin.branches.edit', $branch->id) }}" class="btn btn-sm btn-info text-white shadow-sm" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('admin.branches.destroy', $branch->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this branch?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger shadow-sm" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">No branches found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card border-0 shadow-sm rounded-4">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <h5 class="card-title">উত্তরা ট্রেনিং সেন্টার</h5>
-                                <p class="text-muted small">কোড: UTT</p>
-                                <p class="mb-1"><i class="fas fa-map-marker-alt me-2 text-secondary"></i>উত্তরা সেক্টর ১০</p>
-                                <p><i class="fas fa-phone me-2 text-secondary"></i>+৮৮০১৭১২৩৪৫৬০২</p>
-                            </div>
-                            <span class="badge bg-success">ট্রেনিং সেন্টার</span>
-                        </div>
-                        <hr>
-                        <div class="d-flex justify-content-between">
-                            <small><i class="fas fa-laptop me-1"></i> ৪৫ কম্পিউটার</small>
-                            <small><i class="fas fa-boxes me-1"></i> ২৫০ পণ্য</small>
-                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addBranchModal"><i class="fas fa-eye"></i> দেখুন</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="d-flex justify-content-end mt-3">
+                {{ $branches->links() }}
             </div>
         </div>
     </div>
+</div>
 @endsection

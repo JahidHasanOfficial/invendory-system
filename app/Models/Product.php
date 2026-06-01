@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $guarded = ['id'];
+    protected $guarded = [];
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     public function category()
     {

@@ -17,22 +17,18 @@ class BrandService
         $orgId = auth()->user()->organization_id ?? 0;
         $page = request()->get('page', 1);
         
-        return Cache::remember("{$this->cacheKey}:org:{$orgId}:page:{$page}", $this->cacheTtl, function () use ($orgId, $perPage) {
-            return Brand::when($orgId, function ($query) use ($orgId) {
-                $query->where('organization_id', $orgId);
-            })->latest()->paginate($perPage);
-        });
+        return Brand::when($orgId, function ($query) use ($orgId) {
+            $query->where('organization_id', $orgId);
+        })->latest()->paginate($perPage);
     }
 
     public function getAll(): Collection
     {
         $orgId = auth()->user()->organization_id ?? 0;
         
-        return Cache::remember("{$this->cacheKey}:org:{$orgId}:all", $this->cacheTtl, function () use ($orgId) {
-            return Brand::when($orgId, function ($query) use ($orgId) {
-                $query->where('organization_id', $orgId);
-            })->orderBy('name')->get();
-        });
+        return Brand::when($orgId, function ($query) use ($orgId) {
+            $query->where('organization_id', $orgId);
+        })->orderBy('name')->get();
     }
 
     public function getById(int $id): Brand
