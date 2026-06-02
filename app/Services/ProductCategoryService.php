@@ -17,11 +17,9 @@ class ProductCategoryService
         $orgId = auth()->check() ? auth()->user()->organization_id : 0;
         $page = request()->get('page', 1);
         
-        return Cache::remember("{$this->cacheKey}:org:{$orgId}:page:{$page}", $this->cacheTtl, function () use ($orgId, $perPage) {
-            return ProductCategory::with('parent')->when($orgId, function ($query) use ($orgId) {
+        return ProductCategory::with('parent')->when($orgId, function ($query) use ($orgId) {
                 $query->where('organization_id', $orgId);
             })->latest()->paginate($perPage);
-        });
     }
 
     public function getAll(): Collection
@@ -75,3 +73,4 @@ class ProductCategoryService
         }
     }
 }
+

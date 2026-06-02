@@ -17,12 +17,10 @@ class GoodsReceiptService
     {
         $page = request()->get('page', 1);
         
-        return Cache::remember("{$this->cacheKey}:org:{$orgId}:page:{$page}", $this->cacheTtl, function () use ($orgId, $perPage) {
-            return GoodsReceipt::with(['purchaseOrder', 'branch', 'receivedBy'])
+        return GoodsReceipt::with(['purchaseOrder', 'branch', 'receivedBy'])
                 ->when($orgId, function ($query) use ($orgId) {
                     $query->where('organization_id', $orgId);
                 })->latest()->paginate($perPage);
-        });
     }
 
     /**
@@ -68,3 +66,4 @@ class GoodsReceiptService
         }
     }
 }
+

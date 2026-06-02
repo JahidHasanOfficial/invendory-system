@@ -17,12 +17,10 @@ class RequisitionService
     {
         $page = request()->get('page', 1);
         
-        return Cache::remember("{$this->cacheKey}:org:{$orgId}:page:{$page}", $this->cacheTtl, function () use ($orgId, $perPage) {
-            return Requisition::with(['branch', 'requestedBy'])
+        return Requisition::with(['branch', 'requestedBy'])
                 ->when($orgId, function ($query) use ($orgId) {
                     $query->where('organization_id', $orgId);
                 })->latest()->paginate($perPage);
-        });
     }
 
     /**
@@ -68,3 +66,4 @@ class RequisitionService
         }
     }
 }
+

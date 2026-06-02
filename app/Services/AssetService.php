@@ -17,14 +17,12 @@ class AssetService
     {
         $page = request()->get('page', 1);
         
-        return Cache::remember("{$this->cacheKey}:org:{$orgId}:page:{$page}", $this->cacheTtl, function () use ($orgId, $perPage) {
-            return AssetAssignment::with(['product', 'branch', 'lab', 'workstation', 'assignedTo'])
+        return AssetAssignment::with(['product', 'branch', 'lab', 'workstation', 'assignedTo'])
                 ->when($orgId, function ($query) use ($orgId) {
                     $query->whereHas('branch', function ($q) use ($orgId) {
                         $q->where('organization_id', $orgId);
                     });
                 })->latest()->paginate($perPage);
-        });
     }
 
     /**
@@ -34,8 +32,7 @@ class AssetService
     {
         $page = request()->get('page', 1);
         
-        return Cache::remember("{$this->cacheKey}:employee:org:{$orgId}:page:{$page}", $this->cacheTtl, function () use ($orgId, $perPage) {
-            return AssetAssignment::with(['product', 'branch', 'assignedTo'])
+        return AssetAssignment::with(['product', 'branch', 'assignedTo'])
                 ->whereNotNull('assigned_to_user_id')
                 ->where('assignment_type', 'permanent') // Or however they distinguish employee vs lab
                 ->when($orgId, function ($query) use ($orgId) {
@@ -43,7 +40,6 @@ class AssetService
                         $q->where('organization_id', $orgId);
                     });
                 })->latest()->paginate($perPage);
-        });
     }
 
     /**
@@ -87,3 +83,4 @@ class AssetService
         }
     }
 }
+
