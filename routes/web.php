@@ -20,6 +20,10 @@ use App\Http\Controllers\Admin\GoodsReceiptController;
 use App\Http\Controllers\Admin\RequisitionController;
 use App\Http\Controllers\Admin\TransferController;
 use App\Http\Controllers\Admin\RepairController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\StockController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\StockMovementController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -154,6 +158,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('repairs/{repair}/edit', [RepairController::class, 'edit'])->name('repairs.edit')->permissions('repairs.edit');
     Route::put('repairs/{repair}', [RepairController::class, 'update'])->name('repairs.update')->permissions('repairs.edit');
     Route::delete('repairs/{repair}', [RepairController::class, 'destroy'])->name('repairs.destroy')->permissions('repairs.delete');
+
+    // Extra scaffold routes
+    Route::get('settings', [SettingController::class, 'index'])->name('settings.index')->permissions('settings.view');
+    Route::get('stocks', [StockController::class, 'index'])->name('stocks.index')->permissions('stocks.view');
+    Route::get('reports', [ReportController::class, 'index'])->name('reports.index')->permissions('reports.view');
+    Route::get('stock-movements', [StockMovementController::class, 'index'])->name('stock-movements.index')->permissions('stock-movements.view');
 });
 
 require __DIR__.'/auth.php';

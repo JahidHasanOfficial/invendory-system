@@ -118,12 +118,12 @@
             <div class="text-white-50 small px-3 py-1 fw-semibold" style="font-size: 11px; letter-spacing: 0.5px;">Purchase & Vendor</div>
             
             @can('purchase-orders.view')
-            <a class="nav-link" href="#">
+            <a class="nav-link {{ request()->is('admin/purchase-orders*') ? 'active' : '' }}" href="{{ url('admin/purchase-orders') }}">
                 <i class="fas fa-shopping-cart"></i> Purchase Order (PO)
             </a>
             @endcan
             @can('goods-receipts.view')
-            <a class="nav-link" href="#">
+            <a class="nav-link {{ request()->is('admin/goods-receipts*') ? 'active' : '' }}" href="{{ url('admin/goods-receipts') }}">
                 <i class="fas fa-truck-fast"></i> Goods Receipt
             </a>
             @endcan
@@ -146,7 +146,7 @@
             </a>
             @endcan
             @can('stock-movements.view')
-            <a class="nav-link" href="#">
+            <a class="nav-link {{ request()->is('admin/stock-movements*') ? 'active' : '' }}" href="{{ url('admin/stock-movements') }}">
                 <i class="fas fa-history"></i> Stock Movement
             </a>
             @endcan

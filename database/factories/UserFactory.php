@@ -29,6 +29,15 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'organization_id' => \App\Models\Organization::firstOrCreate(
+                ['id' => 1],
+                [
+                    'name' => 'Default Organization',
+                    'email' => 'org@example.com',
+                    'phone' => '1234567890',
+                    'address' => 'Test Address'
+                ]
+            )->id,
         ];
     }
 
